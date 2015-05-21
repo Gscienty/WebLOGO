@@ -9,7 +9,7 @@
 			//turtle's direciton axis x.
 			dx : 0,
 			//turtle's direction axis y.
-			dy : -1,
+			dy : 1,
 			//turtle's position axis x.
 			x : 0,
 			//turtle's position axis y.
@@ -17,7 +17,9 @@
 			//turtle's color (defalut black).
 			color : '#000',
 			//turtle's width(defualt 1)
-			width : 1
+			width : 1,
+			//draw switch
+			draw : true
 		};
 		this.stateClone = function(){
 			var copy = {};
