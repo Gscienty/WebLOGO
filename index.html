@@ -3,11 +3,34 @@
 	<meta charset='utf-8'/>
 	<title>Web LOGO Language</title>
 	<link rel="stylesheet" type="text/css" href="style/bootstrap.min.css"/>
+	<link rel="stylesheet" type="text/css" href="style/default.css"/>
 	<script type="text/javascript" src="javascripts/jquery-1.11.2.min.js"></script>
 	<script type="text/javascript" src="javascripts/bootstrap.min.js"></script>
+	<script type="text/javascript" src="javascripts/turtle.js"></script>
 </head>
 <body>
-	<div class="col-offset-4 col-md-8">
+	<div class="container-fill">
+		<div class="col-md-offset-1 col-md-10">
+			<div class="page-header">
+			  <h1 style="font-family:Monaco">LOGO Language<small>&nbsp;&nbsp;&nbsp;&nbsp;Running turtle</small></h1>
+			</div>
+		</div>
+
+		<div class="col-md-offset-1 col-md-10 block">
+			<canvas id="tcvs" width="480" height="320"></canvas>
+			<script type="text/javascript">
+			var ctx = document.getElementById("tcvs").getContext("2d");
+			var pen = new Turtle(ctx);
+			</script>
+		</div>
+
+		<div class="col-md-offset-1 col-md-10 block">
+			<textarea class="code-area"></textarea>
+		</div>
+
+		<div class="col-md-offset-1 col-md-10">
+			<p style="text-align:center;padding-top:50px">This is Gscienty. Enjoy it~ :></p>
+		</div>
 	</div>
 </body>
 </html>

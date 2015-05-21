@@ -1,14 +1,20 @@
-.breadcrumb li{
-	margin-top:0px;
-	padding-top:0px;
-	top:0px;
-	margin-left: 30px;
+body{
+	background-color: #dedede;
 }
 
-.breadcrumb a{
-	text-decoration: none;
+.block{
+	margin-top: 40px;
+	background-color: #fff;
+	border-radius: 5px;
+	box-shadow: 1px 1px 20px #fff;
 }
 
-.breadcrumb h4{
-	font-size: 24px;
+#tcvs{
+	width: 100%;
+}
+
+.code-area{
+	border:none;
+	width:100%;
+	height: 100%;
 }
