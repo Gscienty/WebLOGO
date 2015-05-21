@@ -9,7 +9,7 @@
 			//turtle's direciton axis x.
 			dx : 0,
 			//turtle's direction axis y.
-			dy : -1,
+			dy : 1,
 			//turtle's position axis x.
 			x : 0,
 			//turtle's position axis y.
