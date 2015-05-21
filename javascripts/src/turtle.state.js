@@ -9,7 +9,7 @@
 			//turtle's direciton axis x.
 			dx : 0,
 			//turtle's direction axis y.
-			dy : 1,
+			dy : -1,
 			//turtle's position axis x.
 			x : 0,
 			//turtle's position axis y.
@@ -17,10 +17,19 @@
 			//turtle's color (defalut black).
 			color : '#000',
 			//turtle's width(defualt 1)
-			width : 1,
-			//canvas
-			svg : d3.select(options.name).append('svg').style('width',options.width).style('height',options.height)
+			width : 1
 		};
+		this.stateClone = function(){
+			var copy = {};
+			for(var k in this.state){
+				copy[k] = this.state[k];
+			};
+			return copy;
+		};
+		//svg
+		this.svg = d3.select(options.name).append('svg').style('width',options.width).style('height',options.height);
+		//memory stack
+		this.mstack = new Array();
 
 		return this;
 	};
@@ -32,15 +41,4 @@
 
 	root.Turtle = Turtle;
 
-}).call(this);
-
-(function (){
-	"use strict";
-
-	Turtle.Action({
-		name : "testprototype",
-		functional : function (a) {
-			alert(this.state.x);
-		}
-	});
 }).call(this);

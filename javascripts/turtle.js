@@ -17,10 +17,19 @@
 			//turtle's color (defalut black).
 			color : '#000',
 			//turtle's width(defualt 1)
-			width : 1,
-			//canvas
-			svg : d3.select(options.name).append('svg').style('width',options.width).style('height',options.height)
+			width : 1
 		};
+		this.stateClone = function(){
+			var copy = {};
+			for(var k in this.state){
+				copy[k] = this.state[k];
+			};
+			return copy;
+		};
+		//svg
+		this.svg = d3.select(options.name).append('svg').style('width',options.width).style('height',options.height);
+		//memory stack
+		this.mstack = new Array();
 
 		return this;
 	};
@@ -42,7 +51,7 @@
 		functional : function (length) {
 			var nx = this.state.x + length * this.state.dx;
 				ny = this.state.y + length * this.state.dy;
-			this.state.svg.append('line')
+			this.svg.append('line')
 				.attr({
 					x1 : this.state.x,
 					y1 : this.state.y,
@@ -115,3 +124,35 @@
     });
 }).call(this);
 
+//extend place
+(function () {
+	Turtle.Action({
+		name : "place",
+		functional : function (x, y) {
+			this.state.x = x;
+			this.state.y = y;
+		}
+	});
+}).call(this);
+
+//extend memory
+(function(){
+    Turtle.Action({
+        name : 'remember',
+        functional : function(){
+            this.mstack.push(this.stateClone());
+		}
+    });
+}).call(this);
+(function () {
+	Turtle.Action({
+		name : 'recall',
+		functional : function(){
+			if(this.mstack.length == 0) return;
+			var buf = this.mstack.pop();
+        	for(var item in this.state){
+        		this.state[item] = buf[item];
+        	};
+		}
+	});
+}).call(this);
