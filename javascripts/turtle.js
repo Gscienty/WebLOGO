@@ -9,7 +9,7 @@
 			//turtle's direciton axis x.
 			dx : 0,
 			//turtle's direction axis y.
-			dy : 1,
+			dy : -1,
 			//turtle's position axis x.
 			x : 0,
 			//turtle's position axis y.
@@ -85,20 +85,29 @@
         name : 'turn',
         functional : function(angle){
         	var currentAngle;
-        	if(this.state.dx > 0 && this.state.dy >= 0){
-        		currentAngle = Math.asin(this.state.dy / Math.sqrt(Math.pow(this.state.dx,2)+Math.pow(this.state.dy,2)));
+
+        	if(this.state.dx >=0 && this.state.dy > 0){
+        		currentAngle = Math.asin(this.state.dy);
         	}
-        	else if(this.state.dx <= 0 && this.state.dy > 0){
-        		currentAngle = Math.acos(this.state.dx / Math.sqrt(Math.pow(this.state.dx,2)+Math.pow(this.state.dy,2)));
+        	else if(this.state.dx <=0 && this.state.dy > 0){
+        		currentAngle = Math.acos(this.state.dx);
         	}
-        	else if(this.state.dx < 0 && this.state.dy <= 0){
-        		currentAngle = -Math.atan(this.state.dy / this.state.dx);
+        	else if(this.state.dx < 0 && this.state.dy <0){
+        		currentAngle = Math.PI + Math.asin(-this.state.dy);
         	}
-        	else if(this.state.dx >= 0 && this.state.dy < 0){
-        		currentAngle = Math.asin(this.state.dy / Math.sqrt(Math.pow(this.state.dx,2)+Math.pow(this.state.dy,2)));
+        	else if(this.state.dx >=0 && this.state.dy <= 0){
+        		currentAngle = Math.asin(this.state.dy);
         	}
 
         	currentAngle = currentAngle + angle * Math.PI / 180;
+
+        	while(currentAngle < 0){
+        		currentAngle = currentAngle + 2 * Math.PI;
+        	};
+        	while(currentAngle > 2 * Math.PI){
+        		currentAngle = currentAngle - 2 * Math.PI;
+        	}
+
 
         	this.state.dx = Math.cos(currentAngle);
         	this.state.dy = Math.sin(currentAngle);
