@@ -34,13 +34,75 @@
 
 }).call(this);
 
-(function (){
-	"use strict";
 
+//extend move
+(function () {
 	Turtle.Action({
-		name : "testprototype",
-		functional : function (a) {
-			alert(this.state.x);
+		name : 'move',
+		functional : function (length) {
+			var nx = this.state.x + length * this.state.dx;
+				ny = this.state.y + length * this.state.dy;
+			this.state.svg.append('line')
+				.attr({
+					x1 : this.state.x,
+					y1 : this.state.y,
+					x2 : nx,
+					y2 : ny,
+					stroke : this.state.color,
+					'stroke-width' : this.state.width
+				});
+
+
+			this.state.x = nx;
+			this.state.y = ny;
 		}
 	});
 }).call(this);
+
+//extend setcolor
+(function(){
+    Turtle.Action({
+        name : 'setcolor',
+        functional : function(color){
+            this.state.color = color;
+		}
+    });
+}).call(this);
+
+//extend setwidth
+(function(){
+    Turtle.Action({
+        name : 'setwidth',
+        functional : function(width){
+            this.state.width = width;
+		}
+    });
+}).call(this);
+
+//extend turn
+(function () {
+	 Turtle.Action({
+        name : 'turn',
+        functional : function(angle){
+        	var currentAngle;
+        	if(this.state.dx > 0 && this.state.dy >= 0){
+        		currentAngle = Math.asin(this.state.dy / Math.sqrt(Math.pow(this.state.dx,2)+Math.pow(this.state.dy,2)));
+        	}
+        	else if(this.state.dx <= 0 && this.state.dy > 0){
+        		currentAngle = Math.acos(this.state.dx / Math.sqrt(Math.pow(this.state.dx,2)+Math.pow(this.state.dy,2)));
+        	}
+        	else if(this.state.dx < 0 && this.state.dy <= 0){
+        		currentAngle = -Math.atan(this.state.dy / this.state.dx);
+        	}
+        	else if(this.state.dx >= 0 && this.state.dy < 0){
+        		currentAngle = Math.asin(this.state.dy / Math.sqrt(Math.pow(this.state.dx,2)+Math.pow(this.state.dy,2)));
+        	}
+
+        	currentAngle = currentAngle + angle * Math.PI / 180;
+
+        	this.state.dx = Math.cos(currentAngle);
+        	this.state.dy = Math.sin(currentAngle);
+		}
+    });
+}).call(this);
+
