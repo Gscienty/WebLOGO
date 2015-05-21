@@ -23,13 +23,60 @@
 				stateblock.append('li').text(info);
 			},
 			PutTurtle : function () {
-				return 'var t=new Turtle({name:"'+plotname+'",width:"100%",height:"100%"});t.place(300,300);';
+				return 'var t=new Turtle({name:"'+plotname+'",width:"100%",height:"100%"});t.place(300,50);';
+			},
+			Place : function (x, y) {
+				return 't.place('+x+','+y+');';
 			},
 			MoveTurtle : function (step) {
 				return 't.move('+step+');';
 			},
 			DisplayPlot : function () {
 				d3.select(plotname).style('display','block');
+			},
+			SetColor : function (color) {
+				return 't.setcolor('+color+');';
+			},
+			Turn : function (angle) {
+				return 't.turn('+angle+');';
+			},
+			InsParamCount : function (ins) {
+				switch(ins.toUpperCase()){
+					case 'PL': return 2;
+					//forward
+					case 'FD':
+					//back
+					case 'BK':
+					//turn right
+					case 'RT':
+					//turn left
+					case 'LT':
+					//set color
+					case "SETPC": return 1;
+				};
+			},
+			ExecIns : function (ins) {
+				switch(ins[0].toUpperCase()){
+					case 'PL':
+						return prifuns.Place(ins[1], ins[2]);
+					//forward
+					case 'FD':
+						return prifuns.MoveTurtle(ins[1]);
+					//back
+					case 'BK':
+						return prifuns.MoveTurtle('-'+ins[1]);
+					//turn right
+					case 'RT':
+						return prifuns.Turn(ins[1]);
+					//turn left
+					case 'LT':
+						return prifuns.Turn('-'+ins[1]);
+					//set color
+					case "SETPC":
+						return SetColor(ins[1]);
+					default:
+						return '';
+				};
 			}
 		};
 
@@ -39,20 +86,30 @@
 			var insSet = prifuns.PutTurtle();
 			prifuns.AddState('put turtle success.');
 
+			var insary = [];
+			var currentParams = 0;
 			var txtSet = document.getElementById(editorid).value.split('\n').map(function (line) {
-				var blocks = line.split(' ');
-				switch(blocks[0].toUpperCase()){
-					case 'FD':
-						insSet = insSet + prifuns.MoveTurtle(blocks[1]);
-						break;
-				}
+				var blocks = line.replace('(', ' ').replace(')', ' ').split(' ').map(function (block) {
+					if(block!=''){
+						if(!insary.length){
+							currentParams = prifuns.InsParamCount(block);
+						}
+						else{
+							currentParams = currentParams - 1;
+						}
+						insary.push(block);
+						if(!currentParams){
+							insSet = insSet + prifuns.ExecIns(insary);
+							insary = [];
+						}
+					}
+				})
 			});
 
 			prifuns.DisplayPlot();
 			//#test
 			eval(insSet);
 			//#endtest
-
 			instructionset.text(insSet);
 		};
 	};
