@@ -7,38 +7,40 @@
     <body>
         <div class="row">
             <div class="col-xs-10 col-xs-offset-1">
-                <canvas id="draw-panel" width="400" height="300"></canvas>
+                <canvas id="draw-panel" width="400" height="300" style="margin:auto;"></canvas>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2">
-                <div id="shell-panel" style="overflow-y: scroll; height:300px; background:#003333 
+                <div id="shell-panel" style="overflow-y: scroll; height:450px; background:#003333 
 ; color:#00FFCC;padding: 10px;font-family:'Times New Roman';letter-spacing:2px">
                     <div id='output-view'>
                         Welcome to LOGO Language Editor.<br/>
                     </div>
                     <div class="shell-view">
-                        <span class="prompt">></span>&nbsp;<span id="shell-input"></span><span id="cursor">_</span>
+                        <span class="prompt">$</span>&nbsp;<span id="shell-input"></span><span id="cursor">_</span>
                     </div>
                 </div>
             </div>
         </div>
         <script src="src\turtle.base.js"></script>
         <script src="src\command.base.js"></script>
+        <script src="src\command.math.js"></script>
 
         <script>
             commands.extend({
                 name : 'clear_console',
                 test : function(command_line) { return /^clear$/.test(command_line); },
                 method : function(param) {  document.getElementById('output-view').innerHTML = ''; },
-                params : function(command_line) { return ''; }
+                param : function(command_line) { return ''; }
             });
 
-            command.extend({
+            commands.extend({
                 name : 'flush',
                 test : function(command_line) { return /^flush$/.test(command_line); },
-                method 
-            })
+                method : function(param) { window.location.reload(); },
+                param : function(command_line) { return ''; }
+            });
 
             function command_router(command_line){
                 var result = undefined;
@@ -46,9 +48,13 @@
                 for(var i in commands.list){
                     if(commands.list[i].test(command_line)){
                         try{
-                            result = commands.list[i].method(commands.list[i].params(command_line));
+                            var temp_result = commands.list[i].method(commands.list[i].param(command_line));
+                            if(temp_result != undefined){
+                                result = '> ' + commands.list[i].method(commands.list[i].param(command_line));
+                            };
                         }
                         catch(ex){
+                            console.log(ex);
                             result = 'an error occurred.';
                         }
                         find_command = true;
@@ -85,7 +91,7 @@
                     document.getElementById('shell-input').innerHTML += String.fromCharCode(e.which);
                 }
                 else if(e.which === 13){
-                    document.getElementById('output-view').innerHTML += '<span>' + document.getElementById('shell-input').innerHTML + '</span><br/>';
+                    document.getElementById('output-view').innerHTML += '<span class="prompt">$</span>&nbsp;<span>' + document.getElementById('shell-input').innerHTML + '</span><br/>';
 
                     var cmd = document.getElementById('shell-input').innerHTML;
                     document.getElementById('shell-input').innerHTML = '';
@@ -95,6 +101,9 @@
 
                     var result = command_router(cmd);
                     if(result != undefined){
+                        while(result.indexOf(' ') != -1){
+                            result = result.replace(' ', '&nbsp;');
+                        };
                         document.getElementById('output-view').innerHTML += '<span>' + result + '</span><br/>';
                     }
 
