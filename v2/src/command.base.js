@@ -28,7 +28,7 @@
 
     commands.extend({
         name : 'string',
-        test : (a) => { return a.match(/^'.*'/); },
+        test : (a) => { return a.match(/^'.*?'/); },
         method : (a) => {},
         param : 0
     });

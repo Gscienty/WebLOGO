@@ -96,11 +96,39 @@
             a = get_variable_value(a);
             b = get_variable_value(b);
             if(b.name === 'number'){
-                if(a.name === 'string') { return { name : 'string', content : '\'' + a.content[b.content] + '\''}}
+                if(a.name === 'string') { return { name : 'string', content : '\'' + ((s, p)=>{ if(p > s.length - 2 || p < 1){ return ''}; return s[p]; })(a.content, b.content) + '\''}}
             };
             return { name : 'number', content : 0 };
         }
     });
 
-    
+    commands.extend({
+        name : 'fput',
+        test : (a) => { return a.match(/^fput /); },
+        param : 2,
+        method : (a, b) => {
+            a = get_variable_value(a);
+            b = get_variable_value(b);
+            if(a.name === 'string' && b.name === 'string'){
+                return {name : 'string', content : b.content.substr(0, b.content.length - 1) + a.content.substring(1)};
+            };
+            return a;
+        }
+    });
+
+    commands.extend({
+        name : 'lput',
+        test : (a) => { return a.match(/^lput /); },
+        param : 2,
+        method : (a, b) => {
+            a = get_variable_value(a);
+            b = get_variable_value(b);
+            if(a.name === 'string' && b.name === 'string'){
+                return {name : 'string', content : a.content.substr(0, a.content.length - 1) + b.content.substring(1)};
+            };
+            return a;
+        }
+    });
+
+
 }).call(this);
