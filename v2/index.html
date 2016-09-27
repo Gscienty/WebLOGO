@@ -87,9 +87,7 @@
                     };
 
                     var grammer_tree = build_grammer_tree(pre_cmd)[0];
-                    console.log(grammer_tree);
                     var result = execute_grammer_tree(grammer_tree).content;
-                    console.log(result);
                     if(result != undefined){
                         result = ' ' + result;
                         while(result.indexOf(' ') != -1){

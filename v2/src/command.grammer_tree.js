@@ -33,6 +33,7 @@
             if(node.name === 'number') { return node; }
             else if(node.name === 'variable'){ return node; }
             else if(node.name === 'string') { return node; }
+            else if(node.name === 'boolean') { return node; }
             else { return commands.list[node.name].method(); } 
         };
         if(node.left != undefined && node.right === undefined) {
