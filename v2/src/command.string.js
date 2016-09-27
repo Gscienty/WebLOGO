@@ -53,5 +53,12 @@
         }
     });
 
-    
+    command.extend({
+        name : 'isempty',
+        test : (a) => { return a.match(/^empty\? /); },
+        param : 1,
+        method : (a) => {
+
+        }
+    })
 }).call(this);

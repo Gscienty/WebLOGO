@@ -26,7 +26,7 @@
         test : (a) => { return a.match(/^'.*'/); },
         method : (a) => {},
         param : 0
-    })
+    });
 
     commands.extend({
         name : 'print',
