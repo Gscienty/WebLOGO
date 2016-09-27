@@ -23,84 +23,74 @@
                 </div>
             </div>
         </div>
+        <script src="src\jquery-1.11.2.min.js"></script>
+
         <script src="src\turtle.base.js"></script>
         <script src="src\command.base.js"></script>
         <script src="src\command.math.js"></script>
+        <script src="src\command.grammer_tree.js"></script>
 
         <script>
             commands.extend({
-                name : 'clear_console',
-                test : function(command_line) { return /^clear$/.test(command_line); },
-                method : function(param) {  document.getElementById('output-view').innerHTML = ''; },
-                param : function(command_line) { return ''; }
+                name : 'clear',
+                test : function(a) { return a.match(/^clear$/); },
+                method : function() { $('#output-view').html(''); return { name : 'null' }; },
+                param : 0
             });
 
             commands.extend({
                 name : 'flush',
-                test : function(command_line) { return /^flush$/.test(command_line); },
-                method : function(param) { window.location.reload(); },
-                param : function(command_line) { return ''; }
+                test : function(a) { return a.match(/^flush$/); },
+                method : function() { window.location.reload(); return { name : 'null' }; },
+                param : 0
             });
 
-            function command_router(command_line){
-                var result = undefined;
-                var find_command = false;
-                for(var i in commands.list){
-                    if(commands.list[i].test(command_line)){
-                        try{
-                            var temp_result = commands.list[i].method(commands.list[i].param(command_line));
-                            if(temp_result != undefined){
-                                result = '> ' + commands.list[i].method(commands.list[i].param(command_line));
-                            };
-                        }
-                        catch(ex){
-                            console.log(ex);
-                            result = 'an error occurred.';
-                        }
-                        find_command = true;
-                        break;
-                    };
-                };
-                if(find_command === false){
-                    result = 'this command not defined.';
-                }
-                return result;
-            };
-            
             setInterval(function(){
-                if(document.getElementById('cursor').innerText === '_'){
-                    document.getElementById('cursor').innerText = ' ';
+                if($('#cursor').html() === '_'){
+                    $('#cursor').html(' ');
                 }
                 else{
-                    document.getElementById('cursor').innerText = '_';
+                    $('#cursor').html('_');
                 }
             }, 500);
 
             document.onkeydown = function(e){
                 e.preventDefault();
                 if(e.which === 32){
-                    document.getElementById('shell-input').innerHTML += '&nbsp;'
+                    $('#shell-input').html($('#shell-input').html() + '&nbsp;');
                 }
                 else if(e.which === 8){
-                    document.getElementById('shell-input').innerHTML = document.getElementById('shell-input').innerHTML.substring(0, document.getElementById('shell-input').innerHTML.length - 1);
-                }
-                else if (65 <= e.which && e.which <= 90){
-                    document.getElementById('shell-input').innerHTML += String.fromCharCode(e.which + 32);
-                }
-                else if (48 <= e.which && e.which <= 58){
-                    document.getElementById('shell-input').innerHTML += String.fromCharCode(e.which);
+                    if(/&nbsp;$/.test($('#shell-input').html())){
+                        $('#shell-input').html($('#shell-input').html().substr(0, $('#shell-input').html().length - 6));
+                    }
+                    else{
+                        $('#shell-input').html($('#shell-input').html().substr(0, $('#shell-input').html().length - 1));
+                    }
                 }
                 else if(e.which === 13){
-                    document.getElementById('output-view').innerHTML += '<span class="prompt">$</span>&nbsp;<span>' + document.getElementById('shell-input').innerHTML + '</span><br/>';
+                    $('#output-view').html($('#output-view').html() + '<span class="prompt">$</span>&nbsp<span>' + $('#shell-input').html() + '</span><br/>');
 
-                    var cmd = document.getElementById('shell-input').innerHTML;
-                    document.getElementById('shell-input').innerHTML = '';
+                    var cmd = $('#shell-input').html();
+                    $('#shell-input').html('');
                     while(cmd.indexOf('&nbsp;') != -1){
                         cmd = cmd.replace('&nbsp;', ' ');
                     };
 
-                    var result = command_router(cmd);
+                    var pre_cmd = '';
+                    var has_spacing = false;
+                    for(var i = 0; i < cmd.length; i++){
+                        if(cmd[i] === ' ' && has_spacing === true){ continue; }
+                        else if (cmd[i] === ' ') { has_spacing = true; }
+                        else { has_spacing = false; }
+                        pre_cmd = pre_cmd + cmd[i];
+                    };
+
+                    var grammer_tree = build_grammer_tree(pre_cmd)[0];
+                    console.log(grammer_tree);
+                    var result = execute_grammer_tree(grammer_tree).content;
+                    console.log(result);
                     if(result != undefined){
+                        result = ' ' + result;
                         while(result.indexOf(' ') != -1){
                             result = result.replace(' ', '&nbsp;');
                         };
@@ -110,7 +100,7 @@
                     document.getElementById('shell-panel').scrollTop = document.getElementById('shell-panel').scrollHeight;
                 }
                 else{
-                    document.getElementById('shell-input').innerHTML += e.char;
+                    $('#shell-input').html($('#shell-input').html() + e.char);
                 }
             }
         </script>
