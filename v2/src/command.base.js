@@ -1,6 +1,8 @@
 (function(){
     'use strict';
 
+    this.variables = {};
+
     var commands = {};
     commands.list = {};
     commands.extend = function(ex){

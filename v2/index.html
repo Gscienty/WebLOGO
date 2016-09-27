@@ -108,7 +108,10 @@
                     }
 
                     document.getElementById('shell-panel').scrollTop = document.getElementById('shell-panel').scrollHeight;
-                };
+                }
+                else{
+                    document.getElementById('shell-input').innerHTML += e.char;
+                }
             }
         </script>
     </body>
