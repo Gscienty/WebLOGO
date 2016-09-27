@@ -86,5 +86,21 @@
             }
             return { name : 'number', content : -1 };
         }
-    })
+    });
+
+    commands.extend({
+        name : 'item',
+        test : (a) => { return a.match(/^item /); },
+        param : 2,
+        method : (a, b) => {
+            a = get_variable_value(a);
+            b = get_variable_value(b);
+            if(b.name === 'number'){
+                if(a.name === 'string') { return { name : 'string', content : '\'' + a.content[b.content] + '\''}}
+            };
+            return { name : 'number', content : 0 };
+        }
+    });
+
+    
 }).call(this);
