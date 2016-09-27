@@ -8,27 +8,6 @@
     function get_variable_value(a) { while(a.name === 'variable'){ a = variables[a.content]; }; return a; }
 
     commands.extend({
-        name : 'number',
-        test : (a) => { return a.match(/^(-)?\d+(\.\d+)?/); },
-        method : (a) => {},
-        param : 0
-    });
-
-    commands.extend({
-        name : 'variable',
-        test : (a) => { return a.match(/^\$(_|[a-zA-Z])(\w+)?/); },
-        method : (a) => {},
-        param : 0
-    });
-
-    commands.extend({
-        name : 'string',
-        test : (a) => { return a.match(/^'.*'/); },
-        method : (a) => {},
-        param : 0
-    });
-
-    commands.extend({
         name : 'print',
         test : (a) => { return a.match(/^(print|pr) /); },
         method : (a) => { 
