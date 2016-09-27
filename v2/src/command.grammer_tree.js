@@ -2,6 +2,7 @@
     'use strict';
 
     this.build_grammer_tree = function(command_line){
+        console.log(command_line);
         var node = {};
         for(var name in commands.list){
             var commands_match = commands.list[name].test(command_line);

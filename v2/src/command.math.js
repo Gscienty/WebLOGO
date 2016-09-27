@@ -58,7 +58,7 @@
             a = get_variable_value(a);
             b = get_variable_value(b);
             
-            if(a.name === 'number' && b.name === 'number') { result.content = a.content / b.content; }
+            if(a.name === 'number' && b.name === 'number') { result.content = parseFloat(a.content) / parseFloat(b.content); }
             else { result.content = 0; }
 
             return result;
@@ -124,5 +124,48 @@
             return { name : 'null' };
         },
         param : 2
+    });
+
+    commands.extend({
+        name : 'add',
+        test : (a) => { return a.match(/^add /); },
+        param : 2,
+        method : (a, b) => {
+            a = get_variable_value(a);
+            b = get_variable_value(b);
+            if(a.name === 'number' && b.name === 'number'){
+                return { name : 'number', content : parseFloat(a.content) + parseFloat(b.content) };
+            }
+            return { name : 'number', content : 0 }
+        }
+    });
+
+    commands.extend({
+        name : 'sub',
+        test : (a) => { return a.match(/^sub /); },
+        param : 2,
+        method : (a, b) => {
+            a = get_variable_value(a);
+            b = get_variable_value(b);
+            if(a.name === 'number' && b.name === 'number'){
+                return { name : 'number', content : parseFloat(a.content) - parseFloat(b.content) };
+            }
+            return { name : 'number', content : 0 }
+        }
+    });
+    
+
+    commands.extend({
+        name : 'mul',
+        test : (a) => { return a.match(/^mul /); },
+        param : 2,
+        method : (a, b) => {
+            a = get_variable_value(a);
+            b = get_variable_value(b);
+            if(a.name === 'number' && b.name === 'number'){
+                return { name : 'number', content : parseFloat(a.content) * parseFloat(b.content) };
+            }
+            return { name : 'number', content : 0 }
+        }
     });
 }).call(this);
