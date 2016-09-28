@@ -5,6 +5,7 @@
 
     this.build_grammer_tree = function(command_line){
         var node = {};
+
         for(var name in commands.list){
             var commands_match = commands.list[name].test(command_line);
             var result = null;
@@ -57,6 +58,7 @@
             else if(node.name === 'variable'){ return node; }
             else if(node.name === 'string') { return node; }
             else if(node.name === 'boolean') { return node; }
+            else if(node.name === 'array') { return node; }
             else { return commands.list[node.name].method(); } 
         };
         if(node.left != undefined && node.right === undefined) {

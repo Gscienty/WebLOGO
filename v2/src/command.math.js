@@ -168,4 +168,17 @@
             return { name : 'number', content : 0 }
         }
     });
+
+    commands.extend({
+        name : 'list',
+        test : (a) => { return a.match(/^list /); },
+        param : 1,
+        method : (a) => {
+            a = get_variable_value(a);
+            if(a.name === 'array'){
+                return { name : 'array', content : a.content };
+            };
+            return { name : 'null' };
+        }
+    })
 }).call(this);

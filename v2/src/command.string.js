@@ -14,6 +14,9 @@
             a = get_variable_value(a);
             if(a.name === 'string' && a.content.length > 2){
                 return { name : 'string', content : '\'' + a.content[1] + '\'' };
+            }
+            else if(a.name === 'array'){
+                return commands.list['array'].method(a)[0];
             };
             return { name : 'string', content : '\'\'' };
         },
