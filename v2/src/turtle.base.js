@@ -10,8 +10,8 @@
 (function(){
     'use strict';
     var private_state = {
-        x : 0,
-        y : 0,
+        x : 50,
+        y : 50,
         dx : 0,
         dy : -1,
         color : '#000',

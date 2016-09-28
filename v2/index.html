@@ -6,13 +6,13 @@
     </head>
     <body>
         <div class="row">
-            <div class="col-xs-10 col-xs-offset-1">
-                <canvas id="draw-panel" width="400" height="300" style="margin:auto;"></canvas>
+            <div class="col-xs-10 col-xs-offset-1" style="text-align:center">
+                <canvas id="draw-panel" width="400" height="400"></canvas>
             </div>
         </div>
         <div class="row">
             <div class="col-xs-8 col-xs-offset-2">
-                <div id="shell-panel" style="overflow-y: scroll; height:450px; background:#003333 
+                <div id="shell-panel" style="overflow-y: scroll; height:350px; background:#003333 
 ; color:#00FFCC;padding: 10px;font-family:'Times New Roman';letter-spacing:2px;font-size:18px">
                     <div id='output-view'>
                         Welcome to LOGO Language Editor.<br/>
@@ -24,11 +24,15 @@
             </div>
         </div>
         <script src="src\jquery-1.11.2.min.js"></script>
-
+        <script>
+            this.draw_panel = document.getElementById('draw-panel');
+        </script>
         <script src="src\turtle.base.js"></script>
         <script src="src\command.base.js"></script>
         <script src="src\command.math.js"></script>
         <script src="src\command.string.js"></script>
+        <script src="src\command.boolean.js"></script>
+        <script src="src\command.turtle.js"></script>
         <script src="src\command.grammer_tree.js"></script>
 
         <script>
@@ -77,18 +81,7 @@
                         cmd = cmd.replace('&nbsp;', ' ');
                     };
 
-                    var pre_cmd = '';
-                    var has_spacing = false;
-                    for(var i = 0; i < cmd.length; i++){
-                        if(cmd[i] === ' ' && has_spacing === true){ continue; }
-                        else if (cmd[i] === ' ') { has_spacing = true; }
-                        else { has_spacing = false; }
-                        pre_cmd = pre_cmd + cmd[i];
-                    };
-
-                    var grammer_tree = build_grammer_tree(pre_cmd)[0];
-
-                    console.log(grammer_tree);
+                    var grammer_tree = build_grammer_tree(pre_build_machine_command(cmd))[0];
 
                     var result = execute_grammer_tree(grammer_tree).content;
                     if(result != undefined){

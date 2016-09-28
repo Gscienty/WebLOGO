@@ -49,8 +49,8 @@
     });
 
     commands.extend({
-        name : 'quotient',
-        test : (a) => { return a.match(/^quotient /); },
+        name : 'div',
+        test : (a) => { return a.match(/^div /); },
         method : (a, b) => {
             var result = {};
             result.name = 'number';
