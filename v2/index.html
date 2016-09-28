@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <html>
     <head>
         <title>LOGO Language Editor</title>
@@ -10,7 +11,7 @@
                 <canvas id="draw-panel" width="400" height="400"></canvas>
             </div>
         </div>
-        <div class="row">
+        <div class="row shell-block">
             <div class="col-xs-8 col-xs-offset-2">
                 <div id="shell-panel" style="overflow-y: scroll; height:350px; background:#003333 
 ; color:#00FFCC;padding: 10px;font-family:'Times New Roman';letter-spacing:2px;font-size:18px">
@@ -18,14 +19,27 @@
                         Welcome to LOGO Language Editor.<br/>
                     </div>
                     <div class="shell-view">
-                        <span class="prompt">$</span>&nbsp;<span id="shell-input"></span><span id="cursor">_</span>
+                        <span class="prompt">$</span>&nbsp;<span id="shell-input"></span><span class="cursor">_</span>
                     </div>
+                </div>
+            </div>
+        </div>
+        <div class="row edit-block" style="display: none;">
+            <div class="row">
+                <div class="col-xs-6 col-xs-offset-6" style="font-size:21px">
+                    <a href="javascript:void()">run it !</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:edit_exit()">exit</a>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-xs-8 col-xs-offset-2" id="edit-panel" style="overflow-y: scroll; height:350px; background:#003333;color:#00FFCC;padding: 10px;font-family:'Times New Roman';letter-spacing:2px;font-size:18px">
+                    <span class="edit-active"></span><span id="edit-cursor" class="cursor">_</span>
                 </div>
             </div>
         </div>
         <script src="src\jquery-1.11.2.min.js"></script>
         <script>
             this.draw_panel = document.getElementById('draw-panel');
+            var is_shell_state = true;
         </script>
         <script src="src\turtle.base.js"></script>
         <script src="src\command.base.js"></script>
@@ -36,6 +50,13 @@
         <script src="src\command.grammer_tree.js"></script>
 
         <script>
+            function edit_exit(){
+                is_shell_state = true;
+                $('.shell-block').show(200);
+                $('.edit-block').hide(200);
+            };
+
+
             commands.extend({
                 name : 'clear',
                 test : function(a) { return a.match(/^clear$/); },
@@ -50,54 +71,104 @@
                 param : 0
             });
 
+            commands.extend({
+                name : 'edit',
+                test : function(a) { return a.match(/^edit$/); },
+                param : 0,
+                method : function() {
+                    is_shell_state = false;
+                    $('.shell-block').hide(200);
+                    $('.edit-block').show(200);
+                    return { name : 'null' };
+                }
+            });
+
             setInterval(function(){
-                if($('#cursor').html() === '_'){
-                    $('#cursor').html(' ');
+                if($('.cursor').html() === '_'){
+                    $('.cursor').html(' ');
                 }
                 else{
-                    $('#cursor').html('_');
+                    $('.cursor').html('_');
                 }
             }, 500);
 
             document.onkeydown = function(e){
                 e.preventDefault();
                 if(e.which === 32){
-                    $('#shell-input').html($('#shell-input').html() + '&nbsp;');
-                }
-                else if(e.which === 8){
-                    if(/&nbsp;$/.test($('#shell-input').html())){
-                        $('#shell-input').html($('#shell-input').html().substr(0, $('#shell-input').html().length - 6));
+                    if(is_shell_state){
+                        $('.shell-input').html($('.shell-input').html() + '&nbsp;');
                     }
                     else{
-                        $('#shell-input').html($('#shell-input').html().substr(0, $('#shell-input').html().length - 1));
+                        $('.edit-active').html($('.edit-active').html() + '&nbsp;');
+                    };
+                }
+                else if(e.which === 8){
+                    if(is_shell_state){
+                        if(/&nbsp;$/.test($('#shell-input').html())){
+                            $('#shell-input').html($('#shell-input').html().substr(0, $('#shell-input').html().length - 6));
+                        }
+                        else{
+                            $('#shell-input').html($('#shell-input').html().substr(0, $('#shell-input').html().length - 1));
+                        }
                     }
+                    else{
+                        if($('.edit-active').html() === ''){
+                            if($('.edit-line').length === 0) { return; }
+                            else {
+                                $('.edit-active').remove();
+                                $($('.edit-line')[$('.edit-line').length - 1]).addClass('edit-active');
+                                $('.edit-active').removeClass('edit-line');
+                                $('.edit-active').children('br').remove();
+                            }
+                        }
+                        if(/&nbsp;$/.test($('.edit-active').html())){
+                            $('.edit-active').html($('.edit-active').html().substr(0, $('.edit-active').html().length - 6));
+                        }
+                        else{
+                            $('.edit-active').html($('.edit-active').html().substr(0, $('.edit-active').html().length - 1));
+                        }
+                    };
                 }
                 else if(e.which === 13){
-                    $('#output-view').html($('#output-view').html() + '<span class="prompt">$</span>&nbsp<span>' + $('#shell-input').html() + '</span><br/>');
+                    if(is_shell_state){
+                        $('#output-view').html($('#output-view').html() + '<span class="prompt">$</span>&nbsp<span>' + $('#shell-input').html() + '</span><br/>');
 
-                    var cmd = $('#shell-input').html();
-                    $('#shell-input').html('');
-                    while(cmd.indexOf('&nbsp;') != -1){
-                        cmd = cmd.replace('&nbsp;', ' ');
-                    };
-
-                    var grammer_tree = build_grammer_tree(pre_build_machine_command(cmd))[0];
-
-                    var result = execute_grammer_tree(grammer_tree).content;
-                    if(result != undefined){
-                        result = ' ' + result;
-                        while(result.indexOf(' ') != -1){
-                            result = result.replace(' ', '&nbsp;');
+                        var cmd = $('#shell-input').html();
+                        $('#shell-input').html('');
+                        while(cmd.indexOf('&nbsp;') != -1){
+                            cmd = cmd.replace('&nbsp;', ' ');
                         };
-                        document.getElementById('output-view').innerHTML += '<span>' + result + '</span><br/>';
-                    }
 
-                    document.getElementById('shell-panel').scrollTop = document.getElementById('shell-panel').scrollHeight;
+                        var grammer_tree = build_grammer_tree(pre_build_machine_command(cmd))[0];
+
+                        var result = execute_grammer_tree(grammer_tree).content;
+                        if(result != undefined){
+                            result = ' ' + result;
+                            while(result.indexOf(' ') != -1){
+                                result = result.replace(' ', '&nbsp;');
+                            };
+                            document.getElementById('output-view').innerHTML += '<span>' + result + '</span><br/>';
+                        }
+
+                        document.getElementById('shell-panel').scrollTop = document.getElementById('shell-panel').scrollHeight;
+                    }
+                    else{
+                        $('.edit-active').html($('.edit-active').html() + '<br/>');
+                        $('.edit-active').addClass('edit-line');
+                        $('.edit-active').removeClass('edit-active');
+                        $('#edit-cursor').remove();
+                        $('#edit-panel').append('<span class="edit-active"></span><span id="edit-cursor" class="cursor">_</span>');
+                    };
                 }
                 else{
-                    $('#shell-input').html($('#shell-input').html() + e.char);
-                }
-            }
+                    if(is_shell_state){
+                        $('#shell-input').html($('#shell-input').html() + e.char);
+                    }
+                    else{
+                        $('.edit-active').html($('.edit-active').html() + e.char);
+                    };
+                };
+            };
         </script>
     </body>
 </html>

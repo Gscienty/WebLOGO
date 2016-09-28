@@ -30,6 +30,10 @@
             a = get_variable_value(a);
             if(a.name === 'string' && a.content.length > 2){
                 return { name : 'string', content : '\'' + a.content[a.content.length - 2] + '\'' };
+            }
+            else if(a.name === 'array'){
+                var result = commands.list['array'].method(a);
+                return result[result.length - 1];
             };
             return { name : 'string', content : '\'\'' }
         },
