@@ -134,7 +134,7 @@
                 return losp.execfunc(a.content); 
             };
             while(a.name === 'variable') { 
-                a = variables[a.content]; 
+                a = heap[a.content]; 
             }; 
             return a; 
         },

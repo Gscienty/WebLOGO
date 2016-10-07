@@ -2,6 +2,14 @@
     'use strict';
 
     var losp = this.losp;
+    var heap = this.heap;
+
+    losp.extend({
+        name : 'get',
+        test : (w) => { return /^\(get /.test(w); },
+        method : (w) => { return losp.func.variable.method(w); },
+        param : 1
+    });
     
     losp.extend({
         name : 'int',
@@ -92,14 +100,56 @@
     losp.extend({
         name : 'sqrt',
         test : (w) => { return /^\(sqrt /.test(w); },
-        method : (w) => { return { name : 'number', content : Math.sqrt(osp.func.variable.method(w).content) }; },
+        method : (w) => { return { name : 'number', content : Math.sqrt(losp.func.variable.method(w).content) }; },
         param : 1
     });
 
     losp.extend({
         name : 'abs',
         test : (w) => { return /^\(abs /.test(w); },
-        method : (w) => { return { name : 'number', content : Math.abs(osp.func.variable.method(w).content) }; },
+        method : (w) => { return { name : 'number', content : Math.abs(losp.func.variable.method(w).content) }; },
         param : 1
+    });
+
+    losp.extend({
+        name : 'sin',
+        test : (w) => { return /^\(sin /.test(w); },
+        method : (w) => { return { name : 'number', content : Math.sin(losp.func.variable.method(w).content) }; },
+        param : 1
+    });
+
+    losp.extend({
+        name : 'cos',
+        test : (w) => { return /^\(cos /.test(w); },
+        method : (w) => { return { name : 'number', content : Math.cos(losp.func.variable.method(w).content) }; },
+        param : 1
+    });
+
+    losp.extend({
+        name : 'tan',
+        test : (w) => { return /^\(tan /.test(w); },
+        method : (w) => { return { name : 'number', content : Math.tan(losp.func.variable.method(w).content) }; },
+        param : 1
+    });
+
+    losp.extend({
+        name : 'cot',
+        test : (w) => { return /^\(cot /.test(w); },
+        method : (w) => { return { name : 'number', content : 1.0 / Math.tan(losp.func.variable.method(w).content) }; },
+        param : 1
+    });
+
+
+    losp.extend({
+        name : 'make',
+        test : (w) => { return /^\(make /.test(w); },
+        method : (a, b) => {
+            if(a.name == 'variable'){
+                heap[a.content] = losp.func.variable.method(b);
+                return heap[a.content];
+            };
+            return { name : 'null'};
+        },
+        param : 2
     });
 }).call(this);
