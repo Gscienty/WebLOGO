@@ -91,6 +91,19 @@
     });
 
     losp.extend({
+        name : 'pow',
+        test : (w) => { return /^\(pow /.test(w); },
+        method : (a, b) => {
+            a = losp.func.variable.method(a);
+            b = losp.func.variable.method(b);
+            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : Math.pow(parseFloat(a.content), parseFloat(b.content)) }; };
+
+            return {name : 'null'};
+        },
+        param : 2
+    });
+
+    losp.extend({
         name : 'random',
         test : (w) => { return /^\(random /.test(w); },
         method : (w) => { return { name : 'number', content : Math.floor(Math.random() * losp.func.variable.method(w).content) }; },
@@ -133,12 +146,39 @@
     });
 
     losp.extend({
-        name : 'cot',
-        test : (w) => { return /^\(cot /.test(w); },
-        method : (w) => { return { name : 'number', content : 1.0 / Math.tan(losp.func.variable.method(w).content) }; },
+        name : 'asin',
+        test : (w) => { return /^\(asin /.test(w); },
+        method : (w) => { return { name : 'number', content : Math.asin(losp.func.variable.method(w).content) }; },
         param : 1
     });
 
+    losp.extend({
+        name : 'acos',
+        test : (w) => { return /^\(acos /.test(w); },
+        method : (w) => { return { name : 'number', content : Math.acos(losp.func.variable.method(w).content) }; },
+        param : 1
+    });
+
+    losp.extend({
+        name : 'atan',
+        test : (w) => { return /^\(atan /.test(w); },
+        method : (w) => { return { name : 'number', content : Math.atan(losp.func.variable.method(w).content) }; },
+        param : 1
+    });
+
+    losp.extend({
+        name : 'exp',
+        test : (w) => { return /^\(exp /.test(w); },
+        method : (w) => { return { name : 'number', content : Math.exp(losp.func.variable.method(w).content) }; },
+        param : 1
+    });
+
+    losp.extend({
+        name : 'log',
+        test : (w) => { return /^\(log /.test(w); },
+        method : (w) => { return { name : 'number', content : Math.log(losp.func.variable.method(w).content) }; },
+        param : 1
+    });
 
     losp.extend({
         name : 'make',
