@@ -24,18 +24,6 @@
                 </div>
             </div>
         </div>
-        <div class="row edit-block" style="display: none;">
-            <div class="row">
-                <div class="col-xs-6 col-xs-offset-6" style="font-size:21px">
-                    <a href="javascript:edit_run()">run it !</a>&nbsp;&nbsp;&nbsp;&nbsp;|&nbsp;&nbsp;&nbsp;&nbsp;<a href="javascript:edit_exit()">exit</a>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-xs-8 col-xs-offset-2" id="edit-panel" style="overflow-y: scroll; height:320px; background:#003333;color:#00FFCC;padding: 10px;font-family:'Times New Roman';letter-spacing:2px;font-size:18px">
-                    <span class="edit-active"></span><span style="margin-left:0px" id="edit-cursor" class="cursor">_</span>
-                </div>
-            </div>
-        </div>
         <script src="src\jquery-1.11.2.min.js"></script>
         <script>
             this.draw_panel = document.getElementById('draw-panel');
@@ -51,27 +39,6 @@
         <script src="src\command.edit.exec.js"></script>
 
         <script>
-            function edit_exit(){
-                is_shell_state = true;
-                $('.shell-block').show(200);
-                $('.edit-block').hide(200);
-            };
-
-            function pre_edit_line_build(cmd){
-                return cmd;
-            };
-
-            function edit_run(){
-                edit_exit();
-                var edit_lines = [];
-                var edit_lines_size = $('.edit-line').length;
-                for(var i = 0; i < edit_lines_size; i++){
-                    edit_lines.push(pre_edit_line_build($($('.edit-line')[i]).html()));
-                };
-                edit_lines.push(pre_edit_line_build($('.edit-active').html()));
-
-                exec_edit(edit_lines);
-            };
 
             commands.extend({
                 name : 'clear',
