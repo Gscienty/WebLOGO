@@ -27,6 +27,33 @@
             return w;
         }
     });
+
+    losp.extend({
+        name : 'make',
+        test : (w) => { return /^\(make /.test(w); },
+        method : (a, b) => {
+            a = losp.func.exec.method(a);
+            if(a.name == 'variable'){
+                heap[a.content] = losp.func.get.method(b);
+                return heap[a.content];
+            };
+            return { name : 'null'};
+        }
+    });
+
+    losp.extend({
+        name : 'func',
+        test : (w) => { return /^\(func /.test(w); },
+        method : (a, b) => {
+            a = losp.func.exec.method(a);
+            b = losp.func.variable.method(b);
+            if(a.name === 'variable' && b.name === 'block'){
+                heap[a.content] = b;
+                return heap[a.content];
+            };
+            return { name : 'null'};
+        }
+    });
     
     losp.extend({
         name : 'int',
@@ -176,18 +203,5 @@
         name : 'log',
         test : (w) => { return /^\(log /.test(w); },
         method : (w) => { return { name : 'number', content : Math.log(losp.func.get.method(w).content) }; }
-    });
-
-    losp.extend({
-        name : 'make',
-        test : (w) => { return /^\(make /.test(w); },
-        method : (a, b) => {
-            a = losp.func.exec.method(a);
-            if(a.name == 'variable'){
-                heap[a.content] = b;
-                return heap[a.content];
-            };
-            return { name : 'null'};
-        }
     });
 }).call(this);
