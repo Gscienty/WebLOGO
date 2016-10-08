@@ -148,4 +148,20 @@
             return {name : 'null'};
         }
     });
+
+    losp.extend({
+        name : 'setxy',
+        test : (w) => { return /^\(setxy /.test(w); },
+        method : (a, b) => {
+            a = losp.func.get.method(a);
+            b = losp.func.get.method(b);
+            if(a.name === 'number' && b.name === 'number'){
+                losp.func.penup.method();
+                environment.x = a.content;
+                environment.y = b.content;
+                losp.func.pendown.method();
+            }
+            return {name : 'null'};
+        }
+    });
 }).call(this);
