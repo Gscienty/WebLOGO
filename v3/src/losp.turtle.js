@@ -8,7 +8,9 @@
 
     //是否添加动画？
     turtle.sdraw = (position) => {
-        if(environment.active === false) { return ; };
+        if(environment.active === false) {
+            return ; 
+        };
         if(document.getElementById(environment.activeflag) == null){
             var polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
             polyline.style.fill = 'none';
@@ -96,7 +98,6 @@
         method : () => {
             environment.active = false;
             if(document.getElementById(environment.activeflag) != null) { document.getElementById(environment.activeflag).removeAttribute('id'); };
-
             return { name : 'null' };
         }
     });
@@ -114,9 +115,12 @@
         name : 'home',
         test : (w) => { return /^\(home/.test(w); },
         method : () => {
+            
+            losp.func.penup.method();
             environment.x = environment.global.clientWidth / 2;
             environment.y = environment.global.clientHeight / 2;
             environment.angle = Math.PI * 3 / 2;
+            losp.func.pendown.method();
 
             return { name : 'null' };
         }
