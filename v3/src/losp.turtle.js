@@ -6,6 +6,7 @@
     
     var turtle = {};
 
+    //是否添加动画？
     turtle.sdraw = (position) => {
         if(environment.active === false) { return ; };
         if(document.getElementById(environment.activeflag) == null){
