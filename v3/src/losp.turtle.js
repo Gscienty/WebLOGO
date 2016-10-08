@@ -164,4 +164,20 @@
             return {name : 'null'};
         }
     });
+
+    losp.extend({
+        name : 'xcor',
+        test : (w) => { return /^\(xcor/.test(w); },
+        method : () => {
+            return { name : 'number', content : environment.x };
+        }
+    });
+
+    losp.extend({
+        name : 'ycor',
+        test : (w) => { return /^\(ycor/.test(w); },
+        method : () => {
+            return { name : 'number', content : environment.y };
+        }
+    });
 }).call(this);
