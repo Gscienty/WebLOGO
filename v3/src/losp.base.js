@@ -20,11 +20,11 @@
                 var blockinfo = losp.block(block);
                 var paramcount = losp.func[funcname].param;
                 if(paramcount === 0) {
-                    if(funcname === 'number') return { name : 'number', content : parseFloat(losp.func.number.build(block)[0]) };
+                    if(funcname === 'number') return { name : 'number', content : losp.func.number.method(losp.func.number.build(block)[0]) };
                     if(funcname === 'variable') return { name : 'variable', content : losp.func.variable.build(block)[0] };
-                    if(funcname === 'boolean') return { name : 'boolean', content : losp.func.boolean.build(block)[0] };
-                    if(funcname === 'array') return { name : 'array', content : losp.func.array.build(block)[0] };
-                    if(funcname === 'string') return { name : 'string', content : losp.func.string.build(block)[0] };
+                    if(funcname === 'boolean') return { name : 'boolean', content : losp.func.boolean.method(losp.func.boolean.build(block)[0]) };
+                    if(funcname === 'array') return { name : 'array', content : losp.func.array.method(losp.func.array.build(block)[0]) };
+                    if(funcname === 'string') return { name : 'string', content : losp.func.string.method(losp.func.string.build(block)[0]) };
                     return losp.func[funcname].method(); 
                 }
                 else if(paramcount === 1) { return losp.func[funcname].method(blockinfo[1]); }
@@ -79,7 +79,7 @@
             if(losp.func.number.test(inner)){
                 var numbergroup = losp.func.number.build(inner);
                 inner = numbergroup[1];
-                result.push({ name : 'number', content : numbergroup[0] });
+                result.push({ name : 'number', content : losp.func.number.method(numbergroup[0]) });
             }
             else if(losp.func.variable.test(inner)){
                 var variablegroup = losp.func.variable.build(inner);
@@ -89,17 +89,17 @@
             else if(losp.func.string.test(inner)){
                 var stringgroup = losp.func.string.build(inner);
                 inner = stringgroup[1];
-                result.push({ name : 'string', content : stringgroup[0] });
+                result.push({ name : 'string', content : losp.func.string.method(stringgroup[0]) });
             }
             else if(losp.func.boolean.test(inner)){
                 var booleangroup = losp.func.boolean.build(inner);
                 inner = booleangroup[1];
-                result.push({ name : 'boolean', content : booleangroup[0] });
+                result.push({ name : 'boolean', content : losp.func.boolean.method(booleangroup[0]) });
             }
             else if(losp.func.array.test(inner)){
                 var arraygroup = losp.func.array.build(inner);
                 inner = arraygroup[1];
-                result.push({ name : 'array', content : arraygroup[0] });
+                result.push({ name : 'array', content : losp.func.array.method(arraygroup[0]) });
             }
             else if(/^\(/.test(inner)){
                 var blocklength = losp.blocklength(inner);
@@ -187,18 +187,18 @@
                 while(values[0] === ' ') { values = values.substring(1); };
                 var current_ptr = commands.list['array'].test(values);
                 if(current_ptr != null){
-                    result.push({ name : 'array', content : current_ptr[0] });
+                    result.push({ name : 'array', content : losp.func.array.method(current_ptr[0]) });
                     values = values.substring(current_ptr[0].length);
                     continue;
                 };
                 current_ptr = commands.list['boolean'].test(values);
                 if(current_ptr != null){
-                    result.push({ name : 'boolean', content : current_ptr[0] });
+                    result.push({ name : 'boolean', content : losp.func.boolean.method(current_ptr[0]) });
                     values = values.substring(current_ptr[0].length);
                 };
                 current_ptr = commands.list['string'].test(values);
                 if(current_ptr != null){
-                    result.push({ name : 'string', content : current_ptr[0] });
+                    result.push({ name : 'string', content : losp.func.string.method(current_ptr[0]) });
                     values = values.substring(current_ptr[0].length);
                 };
                 current_ptr = commands.list['variable'].test(values);
@@ -208,7 +208,7 @@
                 };
                 current_ptr = commands.list['number'].test(values);
                 if(current_ptr != null){
-                    result.push({ name : 'number', content : current_ptr[0] });
+                    result.push({ name : 'number', content : losp.func.number.method(current_ptr[0]) });
                     values = values.substring(current_ptr[0].length);
                 };
             };

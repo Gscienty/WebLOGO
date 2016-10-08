@@ -14,14 +14,14 @@
     losp.extend({
         name : 'int',
         test : (w) => { return /^\(int /.test(w); },
-        method : (w) => { return { name : 'number', content : Math.floor(parseFloat(losp.func.variable.method(w).content)) }; },
+        method : (w) => { return { name : 'number', content : Math.floor(losp.func.variable.method(w).content) }; },
         param : 1
     });
 
     losp.extend({
         name : 'round',
         test : (w) => { return /^\(round /.test(w); },
-        method : (w) => { return { name : 'number', content : Math.round(parseFloat(losp.func.variable.method(w).content)) }; },
+        method : (w) => { return { name : 'number', content : Math.round(losp.func.variable.method(w).content) }; },
         param : 1
     });
 
@@ -31,7 +31,7 @@
         method : (a, b) => {
             a = losp.func.variable.method(a);
             b = losp.func.variable.method(b);
-            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : parseFloat(a.content) / parseFloat(b.content) }; };
+            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : a.content / b.content }; };
 
             return {name : 'null'};
         },
@@ -44,7 +44,7 @@
         method : (a, b) => {
             a = losp.func.variable.method(a);
             b = losp.func.variable.method(b);
-            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : parseFloat(a.content) % parseFloat(b.content) }; };
+            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : a.content % b.content }; };
 
             return {name : 'null'};
         },
@@ -57,7 +57,7 @@
         method : (a, b) => {
             a = losp.func.variable.method(a);
             b = losp.func.variable.method(b);
-            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : parseFloat(a.content) + parseFloat(b.content) }; };
+            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : a.content + b.content }; };
 
             return {name : 'null'};
         },
@@ -70,7 +70,7 @@
         method : (a, b) => {
             a = losp.func.variable.method(a);
             b = losp.func.variable.method(b);
-            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : parseFloat(a.content) * parseFloat(b.content) }; };
+            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : a.content * b.content }; };
 
             return {name : 'null'};
         },
@@ -83,7 +83,7 @@
         method : (a, b) => {
             a = losp.func.variable.method(a);
             b = losp.func.variable.method(b);
-            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : parseFloat(a.content) - parseFloat(b.content) }; };
+            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : a.content - b.content }; };
 
             return {name : 'null'};
         },
@@ -96,7 +96,7 @@
         method : (a, b) => {
             a = losp.func.variable.method(a);
             b = losp.func.variable.method(b);
-            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : Math.pow(parseFloat(a.content), parseFloat(b.content)) }; };
+            if(a.name === 'number'&& b.name === 'number') { return { name : "number", content : Math.pow(a.content, b.content) }; };
 
             return {name : 'null'};
         },
