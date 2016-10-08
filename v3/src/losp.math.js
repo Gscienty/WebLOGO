@@ -1,4 +1,4 @@
-(function(){
+(() => {
     'use strict';
 
     var losp = this.losp;

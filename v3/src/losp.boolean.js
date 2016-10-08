@@ -1,4 +1,4 @@
-(function(){
+(() => {
     var losp = this.losp;
     
     losp.extend({

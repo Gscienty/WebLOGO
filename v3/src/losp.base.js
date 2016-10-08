@@ -1,4 +1,4 @@
-(function(){
+(() => {
     'use strict';
 
     var heap = {};
@@ -182,34 +182,38 @@
         },
         method : (a) => {
             var result = [];
-            var values = a.content.substr(1, a.content.length - 2);
+            var values = a.substr(1, a.length - 2);
             while(values.length != 0){
                 while(values[0] === ' ') { values = values.substring(1); };
-                var current_ptr = commands.list['array'].test(values);
-                if(current_ptr != null){
-                    result.push({ name : 'array', content : losp.func.array.method(current_ptr[0]) });
-                    values = values.substring(current_ptr[0].length);
+                if(losp.func.array.test(values)){
+                    var buildvalue = losp.func.array.build(values);
+                    values = buildvalue[1];
+                    result.push({ name : 'array', content : losp.func.array.method(buildvalue[0]) });
                     continue;
                 };
-                current_ptr = commands.list['boolean'].test(values);
-                if(current_ptr != null){
-                    result.push({ name : 'boolean', content : losp.func.boolean.method(current_ptr[0]) });
-                    values = values.substring(current_ptr[0].length);
+                if(losp.func.boolean.test(values)){
+                    var buildvalue = losp.func.boolean.build(values);
+                    values = buildvalue[1];
+                    result.push({ name : 'boolean', content : losp.func.boolean.method(buildvalue[0]) });
+                    continue;
                 };
-                current_ptr = commands.list['string'].test(values);
-                if(current_ptr != null){
-                    result.push({ name : 'string', content : losp.func.string.method(current_ptr[0]) });
-                    values = values.substring(current_ptr[0].length);
+                if(losp.func.string.test(values)){
+                    var buildvalue = losp.func.string.build(values);
+                    values = buildvalue[1];
+                    result.push({ name : 'string', content : losp.func.string.method(buildvalue[0]) });
+                    continue;
                 };
-                current_ptr = commands.list['variable'].test(values);
-                if(current_ptr != null){
-                    result.push({ name : 'variable', content : current_ptr[0] });
-                    values = values.substring(current_ptr[0].length);
+                if(losp.func.variable.test(values)){
+                    var buildvalue = losp.func.variable.build(values);
+                    values = buildvalue[1];
+                    result.push({ name : 'variable', content : buildvalue[0] });
+                    continue;
                 };
-                current_ptr = commands.list['number'].test(values);
-                if(current_ptr != null){
-                    result.push({ name : 'number', content : losp.func.number.method(current_ptr[0]) });
-                    values = values.substring(current_ptr[0].length);
+                if(losp.func.number.test(values)){
+                    var buildvalue = losp.func.number.build(values);
+                    values = buildvalue[1];
+                    result.push({ name : 'number', content : losp.func.number.method(buildvalue[0]) });
+                    continue;
                 };
             };
 
