@@ -11,13 +11,11 @@
         losp.func[ex.name].test = ex.test;
         losp.func[ex.name].build = ex.build;
         losp.func[ex.name].method = ex.method;
-        losp.func[ex.name].param = ex.param;
     };
 
     losp.execfunc = function(block){
         for(var funcname in losp.func){
             if(losp.func[funcname].test(block)){
-                var blockinfo = losp.block(block);
                 var paramcount = losp.func[funcname].param;
                 if(paramcount === 0) {
                     if(funcname === 'number') return { name : 'number', content : losp.func.number.method(losp.func.number.build(block)[0]) };
@@ -27,8 +25,7 @@
                     if(funcname === 'string') return { name : 'string', content : losp.func.string.method(losp.func.string.build(block)[0]) };
                     return losp.func[funcname].method(); 
                 }
-                else if(paramcount === 1) { return losp.func[funcname].method(blockinfo[1]); }
-                else if(paramcount === 2) { return losp.func[funcname].method(blockinfo[1], blockinfo[2]); };
+                else{ return losp.func[funcname].method.apply(losp.func[funcname].method, losp.block(block)); }
             };
         };
         block = block.substr(1, block.length - 2);
@@ -41,9 +38,9 @@
         };
         var result = { name : 'null' };
         for(var i = 0; i < blocklist.length; i++){
-            result = losp.execfunc(blocklist[i]);
+            var temp = losp.execfunc(blocklist[i]);
+            if(temp.name != 'null') { result = temp; };
         };
-
         return result;
     };
 
@@ -73,7 +70,6 @@
         })());
 
         var result = [];
-        result.push(length);
         while(inner != ''){
             while(inner[0] === ' ') { inner = inner.substring(1); };
             if(losp.func.number.test(inner)){
@@ -118,8 +114,7 @@
             var group = w.match(/^(-)?\d+(\.\d+)?/)[0];
             return [group, w.substring(group.length)];
         },
-        method : (w) => { return parseFloat(w); },
-        param : 0
+        method : (w) => { return parseFloat(w); }
     });
 
     losp.extend({
@@ -130,15 +125,12 @@
             return [group, w.substring(group.length)];
         },
         method : (a) => {
-            if(a.name === 'block') {
-                return losp.execfunc(a.content); 
-            };
-            while(a.name === 'variable') { 
+            while(a.name === 'variable') {
                 a = heap[a.content]; 
-            }; 
+                if(a === undefined) { a = { name : 'null' }; };
+            };
             return a; 
-        },
-        param : 0
+        }
     });
 
     losp.extend({
@@ -148,8 +140,7 @@
             var group = w.match(/^'.*?'/)[0];
             return [group, w.substring(group.length)];
         },
-        method : (w) => { return w.substr(1, w.length - 2); },
-        param : 0
+        method : (w) => { return w.substr(1, w.length - 2); }
     });
 
     losp.extend({
@@ -159,8 +150,7 @@
             var group = w.match(/^true|^false/)[0];
             return [group, w.substring(group.length)];
         },
-        method : (w) => { return w === 'true'; },
-        param : 0
+        method : (w) => { return w === 'true'; }
     });
 
     losp.extend({
@@ -218,8 +208,7 @@
             };
 
             return result;
-        },
-        param : 0
+        }
     });
 
     this.losp = losp;
