@@ -31,5 +31,41 @@
             };
             return result;
         }
-    })
+    });
+
+    losp.extend({
+        name : 'while',
+        test : (w) => { return /^\(while /.test(w); },
+        method : (a, b) => {
+            var result = { name : 'null' }; 
+            while(true) {
+                var judge = losp.func.get.method(a);
+                if(judge.name === 'boolean' && b.name === 'block' && judge.content == true) {
+                    var temp = losp.func.get.method(b);
+                    if(temp.name != 'null') { result = temp; };
+                    continue;
+                };
+                break;
+            };
+            return result;
+        }
+    });
+
+    losp.extend({
+        name : 'until',
+        test : (w) => { return /^\(until /.test(w); },
+        method : (a, b) => {
+            var result = { name : 'null' }; 
+            do {
+                var judge = losp.func.get.method(a);
+                if(judge.name === 'boolean' && b.name === 'block' && judge.content == false) {
+                    var temp = losp.func.get.method(b);
+                    if(temp.name != 'null') { result = temp; };
+                    continue;
+                };
+                break;
+            }while(true);
+            return result;
+        }
+    });
 }).call(this);
