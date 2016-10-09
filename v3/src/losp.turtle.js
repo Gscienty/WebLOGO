@@ -6,22 +6,23 @@
     
     var turtle = {};
 
-    //是否添加动画？
-    turtle.sdraw = (position) => {
-        if(environment.active === false) {
-            return ; 
+    turtle.sdraw = (points) => {
+        var length = points.length;
+        for(var i = 0; i < length; i++){
+            this.appendscript(() => {
+                if(document.getElementById(environment.activeflag) == null){
+                    var polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
+                    polyline.style.fill = 'none';
+                    polyline.style.stroke = environment.color;
+                    polyline.style['stroke-width'] = environment.width;
+                    polyline.setAttribute('id', environment.activeflag);
+                    polyline.setAttribute('points', '');
+                    environment.global.appendChild(polyline);
+                };
+                var cor = points.shift();
+                document.getElementById(environment.activeflag).setAttribute('points', document.getElementById(environment.activeflag).getAttribute('points') + ' ' + cor.x0 + ',' + cor.y0 + ' ' + cor.x1 + ',' + cor.y1);
+            });
         };
-        if(document.getElementById(environment.activeflag) == null){
-            var polyline = document.createElementNS('http://www.w3.org/2000/svg', 'polyline');
-            polyline.style.fill = 'none';
-            polyline.style.stroke = environment.color;
-            polyline.style['stroke-width'] = environment.width;
-            polyline.setAttribute('id', environment.activeflag);
-            polyline.setAttribute('points', '');
-            environment.global.appendChild(polyline);
-        };
-        var trace = document.getElementById(environment.activeflag);
-        trace.setAttribute('points', trace.getAttribute('points') + ' ' + position[0] + ',' + position[1] + ' ' + position[2] + ',' + position[3]);
     };
 
     losp.extend({
@@ -30,13 +31,31 @@
         method : (a) => {
             a = losp.func.get.method(a);
             if(a.name === 'number'){
-                var position = [];
-                position.push(environment.x, environment.y);
-                environment.x = environment.x + Math.cos(environment.angle) * a.content;
-                environment.y = environment.y + Math.sin(environment.angle) * a.content;
-                position.push(environment.x, environment.y);
+                var origin_x = environment.x;
+                var origin_y = environment.y;
+                environment.x = environment.x + a.content * Math.cos(environment.angle);
+                environment.y = environment.y + a.content * Math.sin(environment.angle);
 
-                turtle.sdraw(position);
+                if(environment.active === true){
+                    var framecount = Math.floor(a.content / environment.speed);
+                    var pointsqueue = [];
+                    for (var i = 1; i <= framecount; i++){
+                        pointsqueue.push({
+                            x0 : origin_x + (i - 1) * environment.speed * Math.cos(environment.angle),
+                            y0 : origin_y + (i - 1) * environment.speed * Math.sin(environment.angle),
+                            x1 : origin_x + (i) * environment.speed * Math.cos(environment.angle),
+                            y1 : origin_y + (i) * environment.speed * Math.sin(environment.angle)
+                        });
+                    }
+                    pointsqueue.push({
+                            x0 : origin_x + (framecount) * environment.speed * Math.cos(environment.angle),
+                            y0 : origin_y + (framecount) * environment.speed * Math.sin(environment.angle),
+                            x1 : origin_x + a.content * Math.cos(environment.angle),
+                            y1 : origin_y + a.content * Math.sin(environment.angle)
+                    });
+
+                    turtle.sdraw(pointsqueue);
+                };
             };
 
             return { name : 'null' };
@@ -79,13 +98,10 @@
         method : (a) => {
             a = losp.func.get.method(a);
             if(a.name === 'number'){
-                var position = [];
-                position.push(environment.x, environment.y);
-                environment.x = environment.x - Math.cos(environment.angle) * a.content;
-                environment.y = environment.y - Math.sin(environment.angle) * a.content;
-                position.push(environment.x, environment.y);
-
-                turtle.sdraw(position);
+                var origin_x = environment.x;
+                var origin_y = environment.y;
+                environment.x = environment.x - a.content * Math.cos(environment.angle);
+                environment.y = environment.y - a.content * Math.sin(environment.angle);
             };
 
             return { name : 'null' };

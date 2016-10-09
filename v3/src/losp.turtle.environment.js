@@ -8,6 +8,9 @@
         y : document.getElementById('cvs').clientHeight / 2,
         angle : Math.PI * 3 / 2,
         color : '#000',
-        width : 2
+        width : 2,
+        animationhandler : null,
+        frameinterval : 10,
+        speed : 40
     };
 }).call(this);
